@@ -1,0 +1,377 @@
+Program.cs 
+---------------------------------------------------------------------------------------
+ public static void TestAddHotel()
+                {
+            TravelAwayRepository repository = new TravelAwayRepository();
+                   Hotel a = new Hotel();
+                    a.HotelName = "Hotel Ayush";
+                    a.HotelRating = 4;
+                    a.DeluxeeRoomPrice = 5000;
+                    a.DoubleRoomPrice = 4000;
+                    a.SingleRoomPrice = 2000;
+                    a.SuiteRoomPrice = 5500;
+                    a.City = "Goa";
+
+                    bool val = repository.AddNewHotel(a);
+                    Console.WriteLine(val);
+                }
+
+
+
+=============================================================================================
+
+
+
+Repository.cs
+------------------------------------------------------------------
+
+  public bool AddNewHotel(Hotel obj)
+        {
+            bool result;
+            try
+            {
+                context.Hotel.Add(obj);
+                context.SaveChanges();
+                result = true;
+            }
+
+            catch (Exception )
+            {
+                
+                result = false;
+            }
+            return result;
+        }
+
+==================================================================================================
+
+
+
+Customer controller.cs
+------------------------------------------------
+
+
+
+
+
+        [HttpPost]
+
+        public bool AddHotel(Hotel hotel)
+        {
+
+            bool status;
+            try
+            {
+                status = repository.AddNewHotel(hotel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                status = false;
+            }
+            return status;
+        }
+
+
+===================================================================================================
+
+
+
+
+
+
+
+ANGULAR
+-------------
+
+
+
+Addhotel component
+-------------------------
+
+
+
+
+hotelcss
+-----------------------------
+
+
+.content {
+  min-height: 90vh;
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+
+.forminputs {
+  border: none;
+  border-radius: 5px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: bold;
+}
+
+.frow {
+  display: flex;
+  justify-content: space-between;
+}
+
+#formsubmit {
+  border: none;
+  border-radius: 25px;
+  padding: 20px 20px;
+  background-color:salmon;
+  box-shadow: 2px 2px 2px #000000;
+  font-size: 20px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: bold;
+}
+
+.addhotel {
+  width: 55%;
+  min-width: 350px;
+  min-height: 260px;
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: rgb(9 232 151 / 0.50);
+  border-radius: 30px;
+  padding: 35px;
+}
+
+
+================================================================================
+
+
+hotelHtml
+-------------------------------
+
+
+
+
+
+
+
+<!--<app-employee-layout></app-employee-layout>-->
+<div class="content">
+  <div class="addhotel">
+    <h1 style="color:red;text-shadow:1px 1px 1px black;margin-bottom:20px;">Add Hotel</h1>
+
+    <form #hotelForm="ngForm" (ngSubmit)="submithotelForm(hotelForm)">
+      <div class="row frow">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="hotelname">Hotel Name</label><br />
+            <input type="text" name="hotelname" placeholder="" class="form-control forminputs" #hotelRef="ngModel" ngModel required />
+          </div>
+          <div *ngIf="hotelRef.errors && (hotelRef.dirty || hotelRef.touched)" style="text-align:left;color:red;">
+            <div [hidden]="!hotelRef.errors.required">
+              <p>&nbsp;Hotel Name is mandatory</p>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div class="col-md-6">
+          <div class="form-group">
+            <select class="form-control forminputs" name="hotelType" #hoteltypeRef="ngModel" ngModel required>
+              <option value="" disabled selected>Hotel Rating</option>
+              <option value="2">2-star</option>
+              <option value="3">3-star</option>
+              <option value="4">4-star</option>
+              <option value="5">5-star</option>
+            </select>
+          </div>
+          <div *ngIf="hoteltypeRef.errors && (hoteltypeRef.dirty || hoteltypeRef.touched)" style="text-align:left;color:red;">
+            <div [hidden]="!hoteltypeRef.errors.required">
+              <p>&nbsp;Hotel Rating is mandatory</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row frow">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="singleprice">Single Room Price</label><br />
+            <input type="number" name="singleprice" placeholder="" class="form-control forminputs" #singleRef="ngModel" ngModel required />
+          </div>
+          <div *ngIf="singleRef.errors && (singleRef.dirty || singleRef.touched)" style="text-align:left;color:red;">
+            <div [hidden]="!singleRef.errors.required">
+              <p>&nbsp;Price is mandatory</p>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="doubleprice">Double Room Price</label><br />
+            <input type="number" name="doubleprice" placeholder="" class="form-control forminputs" #doubleRef="ngModel" ngModel required />
+          </div>
+          <div *ngIf="doubleRef.errors && (doubleRef.dirty || doubleRef.touched)" style="text-align:left;color:red;">
+            <div [hidden]="!doubleRef.errors.required">
+              <p>&nbsp;Price is mandatory</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row frow">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="suiterice">Suite Price</label><br />
+            <input type="number" name="suiteprice" placeholder="" class="form-control forminputs" #suiteRef="ngModel" ngModel required />
+          </div>
+          <div *ngIf="suiteRef.errors && (suiteRef.dirty || suiteRef.touched)" style="text-align:left;color:red;">
+            <div [hidden]="!suiteRef.errors.required">
+              <p>&nbsp;Price is mandatory</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="deluxe">Deluxe Price</label><br />
+            <input type="number" name="deluxeprice" placeholder="" class="form-control forminputs" #deluxeRef="ngModel" ngModel required />
+          </div>
+          <div *ngIf="deluxeRef.errors && (deluxeRef.dirty || deluxeRef.touched)" style="text-align:left;color:red;">
+            <div [hidden]="!deluxeRef.errors.required">
+              <p>&nbsp;Price is mandatory</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row frow">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="city">City Name</label><br />
+            <input type="text" name="city" placeholder="" class="form-control forminputs" #cityRef="ngModel" ngModel required />
+          </div>
+          <div *ngIf="cityRef.errors && (cityRef.dirty || cityRef.touched)" style="text-align:left;color:red;">
+            <div [hidden]="!cityRef.errors.required">
+              <p>&nbsp;City is mandatory</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" id="formsubmit" [disabled]="!hotelForm.form.valid">Add</button>
+      <div *ngIf="showDiv" style="color:red;text-align:center;">
+        <br />
+        {{msg}}
+      </div>
+    </form>
+  </div>
+</div>
+
+
+==============================================================================================================
+
+
+HotelTs
+------------------------------------------------------------------------------------
+
+
+@Component({
+  selector: 'app-addhotel',
+  templateUrl: './addhotel.component.html',
+  styleUrls: ['./addhotel.component.css']
+})
+export class AddhotelComponent implements OnInit {
+  status: boolean;
+  showDiv: boolean;
+  errorMsg: string;
+  msg: string;
+  userRole: string;
+
+
+  constructor(private userService: UserserviceService, private router: Router, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.userRole = sessionStorage.getItem('userRole');
+    if (this.userRole != "Employee") {
+      this.router.navigate(['/login/2']);
+    }
+  }
+  submithotelForm(form: NgForm) {
+
+    var hotel: IHotel = {
+      HotelName: form.value.hotelname,
+      HotelRating: parseInt(form.value.hotelType),
+      SingleRoomPrice: parseInt(form.value.singleprice),
+      DoubleRoomPrice: parseInt(form.value.doubleprice),
+      DeluxeeRoomPrice: parseInt(form.value.deluxeprice),
+      SuiteRoomPrice: parseInt(form.value.suiteprice),
+      City: form.value.city
+    }
+    
+    this.userService.addHotel(hotel).subscribe(
+      responseHotelStatus => {
+        
+        this.status = responseHotelStatus;
+        this.showDiv = true;
+        if (this.status) {
+          this.msg = "Hotel added successfully";
+        } else {
+          this.msg = "Hotel not added";
+        }
+      },
+      responseHotelError => {
+        this.errorMsg = responseHotelError;
+      },
+      () => console.log("AddHotel method executed successfully")
+    );
+
+  }
+}
+
+
+===========================================================================================================================
+
+
+
+
+
+
+userServices.ts
+-----------------------------------------
+
+
+ addHotel(hotel: IHotel): Observable<boolean> {
+    let temp = this.http.post<boolean>('https://localhost:44355/api/Customer/AddHotel', hotel).pipe(catchError(this.errorHandler));
+    return temp;
+  }
+
+
+=======================================================================================================================================
+
+
+
+
+
+
+interfaces
+-----------------
+
+hotel.ts
+-------------------------------------------------
+
+export interface IHotel {
+  HotelName: string,
+  HotelRating: number,
+  SingleRoomPrice: number,
+  DoubleRoomPrice: number,
+  DeluxeeRoomPrice: number,
+  SuiteRoomPrice: number,
+  City: string
+}
+
+
+
+
+
